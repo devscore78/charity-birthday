@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puzzle</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; background: #fff; color: #0a0a0a; font-family: 'Inter', sans-serif; overflow: hidden; }
+  .hidden { display: none !important; }
+  .wrap { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; }
+  .top { position: absolute; top: 26px; left: 24px; right: 24px; display: flex; justify-content: space-between; }
+  .lbl { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 2.5px; color: #8a8a8a; text-transform: uppercase; }
+  .title { font-weight: 900; font-size: clamp(1.8rem, 8vw, 3rem); line-height: 0.9; letter-spacing: -2px; width: 100%; max-width: 400px; margin-bottom: 12px; z-index: 3; }
+  .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; letter-spacing: 2px; text-transform: uppercase; border: 1.5px solid #0a0a0a; padding: 6px 12px; margin-bottom: 24px; background: #fff; z-index: 3; }
+  .frame { border: 1.5px solid #0a0a0a; padding: 10px; width: min(86vw, 320px); aspect-ratio: 1/1; background: #fff; z-index: 3; }
+  .preview, .grid { width: 100%; height: 100%; overflow: hidden; }
+  .preview img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.1); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 2px; background: #0a0a0a; }
+  .piece { background-size: 300% 300%; background-repeat: no-repeat; cursor: pointer; transition: 0.2s; filter: grayscale(100%) contrast(1.1); }
+  .piece.sel { transform: scale(0.9); box-shadow: 0 0 0 2px #e94b2c inset; filter: grayscale(0%); }
+  .swaps { margin-top: 18px; font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; z-index: 3; }
+  .red { position: absolute; bottom: 0; left: 0; right: 0; height: 22%; background: #e94b2c; z-index: 1; }
+
+  .hurray { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 9999; background: rgba(233,75,44,0.15); }
+  .hurray span { font-weight: 900; font-size: clamp(3rem, 16vw, 9rem); letter-spacing: -4px; animation: hp 1.6s ease-out forwards; }
+  @keyframes hp { 0% { opacity: 0; transform: scale(0.4); } 35% { opacity: 1; transform: scale(1.1); } 70% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.05); } }
+
+  .win-screen {
+    position: absolute; inset: 0;
+    background: #fff;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 30px 24px;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    overflow-y: auto;
+  }
+  .win-screen.show { opacity: 1; }
+  .win-title { font-weight: 900; font-size: clamp(2rem, 10vw, 3.5rem); letter-spacing: -3px; text-align: center; margin-bottom: 8px; }
+  .win-sub { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 3px; color: #8a8a8a; text-transform: uppercase; margin-bottom: 24px; text-align: center; }
+  .flyer-frame { width: min(90vw, 360px); border: 1.5px solid #0a0a0a; background: #fff; padding: 8px; margin-bottom: 20px; animation: flyerIn 0.8s ease both; }
+  @keyframes flyerIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .flyer-frame img { width: 100%; display: block; }
+  .win-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: min(90vw, 360px); }
+  .btn-solid { padding: 14px 20px; border: 1.5px solid #0a0a0a; background: #0a0a0a; color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; flex: 1; min-width: 130px; transition: 0.2s; }
+  .btn-solid:hover { background: #e94b2c; border-color: #e94b2c; transform: translate(-2px, -2px); box-shadow: 4px 4px 0 #0a0a0a; }
+  .btn-solid.outline { background: #fff; color: #0a0a0a; }
+  .btn-solid.outline:hover { background: #0a0a0a; color: #fff; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <span class="lbl">/ GAME</span>
+    <span class="lbl">FIX THE PICTURE</span>
+  </div>
+  <h2 class="title">Fix the<br>Picture.</h2>
+  <p class="tag" id="hint">Memorize the image! Shuffling in 3s…</p>
+  <div class="frame">
+    <div class="preview" id="preview"><img src="assets/puzzle.jpeg" alt=""></div>
+    <div class="grid hidden" id="grid"></div>
+  </div>
+  <p class="swaps" id="swaps">SWAPS: 0</p>
+  <div class="red"></div>
+</div>
+
+<div class="win-screen hidden" id="winScreen">
+  <h2 class="win-title">HURRAY!</h2>
+  <p class="win-sub">You unlocked your surprise</p>
+  <div class="flyer-frame"><img src="assets/hero-bg.jpg" alt="surprise"></div>
+  <div class="win-actions">
+    <a class="btn-solid" download="surprise.jpg" href="assets/hero-bg.jpg"><i class="fa-solid fa-download"></i> DOWNLOAD</a>
+    <button class="btn-solid outline" id="shareBtn"><i class="fa-solid fa-share-nodes"></i> SHARE</button>
+  </div>
+  <div class="win-actions" style="margin-top: 12px;">
+    <a class="btn-solid outline" href="home.html" style="flex: 1;"><i class="fa-solid fa-house"></i> BACK HOME</a>
+  </div>
+</div>
+
+<script>
+  var solved = false;
+  var swaps = 0;
+  var sel = null;
+  var hint = document.getElementById('hint');
+  var preview = document.getElementById('preview');
+  var grid = document.getElementById('grid');
+  var swapsEl = document.getElementById('swaps');
+
+  var count = 3;
+  var cd = setInterval(function() {
+    count--;
+    if (count <= 0) {
+      clearInterval(cd);
+      shuffle();
+      preview.classList.add('hidden');
+      grid.classList.remove('hidden');
+      hint.textContent = 'Tap two pieces to swap them';
+    } else {
+      hint.textContent = 'Memorize the image! Shuffling in ' + count + 's…';
+    }
+  }, 1000);
+
+  function shuffle() {
+    var order = [0,1,2,3,4,5,6,7,8];
+    for (var i = order.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = order[i]; order[i] = order[j]; order[j] = t;
+    }
+    var sorted = true;
+    for (var k = 0; k < order.length; k++) if (order[k] !== k) sorted = false;
+    if (sorted) return shuffle();
+    grid.innerHTML = '';
+    order.forEach(function(orig) {
+      var row = Math.floor(orig / 3);
+      var col = orig % 3;
+      var p = document.createElement('div');
+      p.className = 'piece';
+      p.dataset.correct = orig;
+      p.style.backgroundImage = "url('assets/puzzle.jpeg')";
+      p.style.backgroundPosition = (col * 50) + '% ' + (row * 50) + '%';
+      p.addEventListener('click', function() { tap(p); });
+      grid.appendChild(p);
+    });
+  }
+
+  function tap(p) {
+    if (solved) return;
+    if (!sel) { sel = p; p.classList.add('sel'); return; }
+    if (sel === p) { p.classList.remove('sel'); sel = null; return; }
+    var a = sel, b = p;
+    var aBg = a.style.backgroundPosition;
+    a.style.backgroundPosition = b.style.backgroundPosition;
+    b.style.backgroundPosition = aBg;
+    var aC = a.dataset.correct;
+    a.dataset.correct = b.dataset.correct;
+    b.dataset.correct = aC;
+    a.classList.remove('sel');
+    sel = null;
+    swaps++;
+    swapsEl.textContent = 'SWAPS: ' + swaps;
+    check();
+  }
+
+  function check() {
+    var pieces = [].slice.call(grid.children);
+    var done = pieces.every(function(p, i) { return Number(p.dataset.correct) === i; });
+    if (done) {
+      solved = true;
+      hint.textContent = 'Perfect';
+      localStorage.setItem('tp_puzzle_solved', '1');
+      confetti();
+      hurray();
+      setTimeout(function() {
+        document.getElementById('winScreen').classList.remove('hidden');
+        setTimeout(function() {
+          document.getElementById('winScreen').classList.add('show');
+        }, 30);
+      }, 1600);
+    }
+  }
+
+  function confetti() {
+    var icons = ['fa-solid fa-star', 'fa-solid fa-certificate', 'fa-solid fa-heart', 'fa-solid fa-bolt'];
+    for (var i = 0; i < 60; i++) {
+      var c = document.createElement('span');
+      c.innerHTML = '<i class="' + icons[Math.floor(Math.random() * icons.length)] + '"></i>';
+      c.style.cssText = 'position:fixed;font-size:22px;pointer-events:none;z-index:9999;color:' + (['#e94b2c','#0a0a0a','#ffd166'][Math.floor(Math.random()*3)]) + ';transition:transform 1.4s ease,opacity 1.4s ease;';
+      c.style.left = (50 + (Math.random() * 60 - 30)) + 'vw';
+      c.style.top = (50 + (Math.random() * 40 - 20)) + 'vh';
+      document.body.appendChild(c);
+      (function(el) {
+        requestAnimationFrame(function() {
+          el.style.transform = 'translate(' + (Math.random() * 400 - 200) + 'px, ' + (Math.random() * -400) + 'px) rotate(' + (Math.random() * 720) + 'deg)';
+          el.style.opacity = '0';
+        });
+        setTimeout(function() { el.remove(); }, 1600);
+      })(c);
+    }
+  }
+
+  function hurray() {
+    var o = document.createElement('div');
+    o.className = 'hurray';
+    o.innerHTML = '<span>HURRAY</span>';
+    document.body.appendChild(o);
+    setTimeout(function() { o.remove(); }, 1700);
+  }
+
+  document.getElementById('shareBtn').addEventListener('click', async function() {
+    try {
+      var res = await fetch('assets/hero-bg.jpg');
+      var blob = await res.blob();
+      var file = new File([blob], 'surprise.jpg', { type: blob.type });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'Happy Birthday!' });
+        return;
+      }
+      if (navigator.share) {
+        await navigator.share({ title: 'Happy Birthday!', url: window.location.href });
+        return;
+      }
+      alert('Sharing not supported.');
+    } catch (e) {}
+  });
+</script>
+</body>
+</html>

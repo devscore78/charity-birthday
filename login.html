@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; font-family: 'Inter', sans-serif; overflow: hidden; background: #000; color: #fff; }
+  .bg { position: fixed; inset: 0; background-image: url('assets/login.jpg'); background-size: cover; background-position: center; filter: brightness(0.4); z-index: 0; }
+  .wrap { position: relative; z-index: 1; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; gap: 30px; }
+  .title { font-size: 1rem; font-weight: 400; letter-spacing: 1px; opacity: 0.9; text-align: center; }
+  .dots { display: flex; gap: 20px; }
+  .dots span { width: 26px; height: 3px; background: rgba(255,255,255,0.35); transition: 0.25s; }
+  .dots span.filled { background: #fff; transform: scaleY(1.4); }
+  .dots.shake { animation: shk 0.45s ease; }
+  @keyframes shk { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-10px); } 40% { transform: translateX(10px); } 60% { transform: translateX(-6px); } 80% { transform: translateX(6px); } }
+  .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; width: min(80vw, 320px); }
+  .btn { aspect-ratio: 1 / 1; border-radius: 50%; border: 1px solid rgba(255,255,255,0.35); background: rgba(255,255,255,0.08); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); color: #fff; font-family: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: 0.15s; }
+  .btn:hover { background: rgba(255,255,255,0.16); }
+  .btn:active { transform: scale(0.93); background: rgba(255,255,255,0.28); }
+  .btn .num { font-size: 1.7rem; font-weight: 300; line-height: 1; }
+  .btn .alpha { font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 2px; opacity: 0.6; }
+  .btn.empty { visibility: hidden; pointer-events: none; }
+  .btn.del { font-size: 1.1rem; }
+  .msg { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; min-height: 1.4em; }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="wrap">
+  <h2 class="title">Enter your secret code</h2>
+  <div class="dots" id="dots"><span></span><span></span><span></span><span></span></div>
+  <div class="pad">
+    <button class="btn" onclick="press('1')"><span class="num">1</span><span class="alpha">ABC</span></button>
+    <button class="btn" onclick="press('2')"><span class="num">2</span><span class="alpha">DEF</span></button>
+    <button class="btn" onclick="press('3')"><span class="num">3</span><span class="alpha">GHI</span></button>
+    <button class="btn" onclick="press('4')"><span class="num">4</span><span class="alpha">JKL</span></button>
+    <button class="btn" onclick="press('5')"><span class="num">5</span><span class="alpha">MNO</span></button>
+    <button class="btn" onclick="press('6')"><span class="num">6</span><span class="alpha">PQR</span></button>
+    <button class="btn" onclick="press('7')"><span class="num">7</span><span class="alpha">STU</span></button>
+    <button class="btn" onclick="press('8')"><span class="num">8</span><span class="alpha">VWX</span></button>
+    <button class="btn" onclick="press('9')"><span class="num">9</span><span class="alpha">YZ</span></button>
+    <button class="btn empty"></button>
+    <button class="btn" onclick="press('0')"><span class="num">0</span></button>
+    <button class="btn del" onclick="del()"><i class="fa-solid fa-delete-left"></i></button>
+  </div>
+  <p class="msg" id="msg"></p>
+</div>
+
+<script>
+  localStorage.clear();
+  sessionStorage.clear();
+
+  var CODE = '1234';
+  var typed = '';
+
+  function press(k) {
+    if (typed.length >= 4) return;
+    typed += k;
+    render();
+    if (typed.length === 4) {
+      setTimeout(function() {
+        if (typed === CODE) {
+          document.getElementById('msg').textContent = 'CORRECT';
+          document.getElementById('msg').style.color = '#4ade80';
+          setTimeout(function() { window.location.href = 'loading.html'; }, 600);
+        } else {
+          document.getElementById('msg').textContent = 'WRONG';
+          document.getElementById('msg').style.color = '#e94b2c';
+          document.getElementById('dots').classList.add('shake');
+          setTimeout(function() {
+            document.getElementById('dots').classList.remove('shake');
+            typed = '';
+            render();
+            document.getElementById('msg').textContent = '';
+          }, 500);
+        }
+      }, 180);
+    }
+  }
+
+  function del() { typed = typed.slice(0, -1); render(); }
+
+  function render() {
+    var d = document.querySelectorAll('#dots span');
+    for (var i = 0; i < d.length; i++) {
+      if (i < typed.length) d[i].classList.add('filled');
+      else d[i].classList.remove('filled');
+    }
+  }
+</script>
+</body>
+</html>
