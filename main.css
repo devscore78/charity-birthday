@@ -382,3 +382,15 @@ html, body { height: 100%; overflow: hidden; background: #000; font-family: 'Int
 
 /* ========== CONFETTI BURST (created by main.js) ========== */
 .burst-piece { position: fixed; font-size: 22px; pointer-events: none; z-index: 9999; transition: transform 1.4s ease, opacity 1.4s ease; }
+
+/* ========== PUZZLE: DONE button + "try again" picture ========== */
+#s-puzzle .pz-done { margin-top: 14px; z-index: 3; min-width: 160px; padding: 14px 28px; border: 1.5px solid #0a0a0a; background: #0a0a0a; color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+#s-puzzle .pz-done:hover { background: #e94b2c; border-color: #e94b2c; transform: translate(-2px, -2px); box-shadow: 4px 4px 0 #0a0a0a; }
+#s-puzzle .pz-done:active { transform: scale(0.95); box-shadow: none; }
+#s-puzzle .reveal { position: absolute; inset: 0; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 24px; z-index: 90; opacity: 0; transition: opacity 0.35s ease; overflow-y: auto; }
+#s-puzzle .reveal.show { opacity: 1; }
+#s-puzzle .reveal-title { font-weight: 900; font-size: clamp(1.8rem, 9vw, 3rem); letter-spacing: -2px; text-align: center; margin-bottom: 8px; }
+#s-puzzle .reveal-sub { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 3px; color: #8a8a8a; text-transform: uppercase; margin-bottom: 22px; text-align: center; }
+#s-puzzle .reveal-frame { border: 1.5px solid #0a0a0a; padding: 10px; width: min(86vw, 320px); aspect-ratio: 1 / 1; background: #fff; margin-bottom: 22px; }
+#s-puzzle .reveal-frame img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(100%) contrast(1.1); }
+#s-puzzle .reveal .btn-solid { min-width: 180px; flex: none; }

@@ -522,7 +522,9 @@
   var pzHint = $('pzHint');
   var pzSwaps = $('pzSwaps');
   var pzWin = $('pzWin');
-  var pz = { solved: false, swaps: 0, sel: null, timer: null };
+  var pzDone = $('pzDone');
+  var pzReveal = $('pzReveal');
+  var pz = { solved: false, locked: false, swaps: 0, sel: null, timer: null };
 
   playGameBtn.addEventListener('click', function () {
     show('puzzle');
@@ -531,7 +533,10 @@
 
   function startPuzzle() {
     clearInterval(pz.timer);
-    pz.solved = false; pz.swaps = 0; pz.sel = null;
+    pz.solved = false; pz.locked = false; pz.swaps = 0; pz.sel = null;
+    pzDone.classList.add('hidden');
+    pzReveal.classList.remove('show');
+    pzReveal.classList.add('hidden');
     ensure($('s-puzzle'));
     pzSwaps.textContent = 'SWAPS: 0';
     pzHint.textContent = 'Memorize the image! Shuffling in 3s…';
@@ -548,7 +553,8 @@
         shuffle();
         pzPreview.classList.add('hidden');
         pzGrid.classList.remove('hidden');
-        pzHint.textContent = 'Tap two pieces to swap them';
+        pzHint.textContent = 'Swap the pieces, then press DONE';
+        pzDone.classList.remove('hidden');
       } else {
         pzHint.textContent = 'Memorize the image! Shuffling in ' + count + 's…';
       }
@@ -577,7 +583,7 @@
   }
 
   function tap(p) {
-    if (pz.solved) return;
+    if (pz.solved || pz.locked) return;
     if (!pz.sel) { pz.sel = p; p.classList.add('sel'); return; }
     if (pz.sel === p) { p.classList.remove('sel'); pz.sel = null; return; }
     var a = pz.sel, b = p;
@@ -591,13 +597,31 @@
     pz.sel = null;
     pz.swaps++;
     pzSwaps.textContent = 'SWAPS: ' + pz.swaps;
-    checkPuzzle();
   }
 
-  function checkPuzzle() {
+  function isArranged() {
     var pieces = [].slice.call(pzGrid.children);
-    var done = pieces.every(function (p, i) { return Number(p.dataset.correct) === i; });
-    if (!done) return;
+    return pieces.length === 9 && pieces.every(function (p, i) { return Number(p.dataset.correct) === i; });
+  }
+
+  // DONE: check her pieces against the real picture
+  pzDone.addEventListener('click', function () {
+    if (pz.solved || pz.locked) return;
+    if (isArranged()) { winPuzzle(); return; }
+    // not right: show the picture, keep her pieces exactly as they are
+    pz.locked = true;
+    pzReveal.classList.remove('hidden');
+    setTimeout(function () { pzReveal.classList.add('show'); }, 30);
+  });
+
+  // CONTINUE: back to the same pieces, same swap count
+  $('pzContinue').addEventListener('click', function () {
+    pzReveal.classList.remove('show');
+    pzReveal.classList.add('hidden');
+    pz.locked = false;
+  });
+
+  function winPuzzle() {
     pz.solved = true;
     pzHint.textContent = 'Perfect';
     solvedMem = true;
