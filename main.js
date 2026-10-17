@@ -49,24 +49,11 @@
   var songPlaying = false;
 
   var audioUnlocked = false;
-  function unlockAudio() {
-    if (audioUnlocked) return;
-    audioUnlocked = true;
-    applause.muted = true;
-    var p = applause.play();
-    if (p && p.then) {
-      p.then(function () {
-        applause.pause();
-        applause.currentTime = 0;
-        applause.muted = false;
-      }).catch(function () { applause.muted = false; });
-    } else {
-      applause.muted = false;
-    }
-  }
+  var unlocking = false;       // the silent unlock-play is still in flight
+  var applauseWanted = false;  // the countdown asked for applause while unlocking
 
-  function startApplause() {
-    if (!applause.paused || songPlaying) return;
+  function playApplauseNow() {
+    applause.muted = false;
     applause.loop = true;
     applause.volume = 0.7;
     var p = applause.play();
@@ -78,6 +65,44 @@
         }, { once: true });
       });
     }
+  }
+
+  // First PIN tap: play the applause silently once so phones allow it later.
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+    unlocking = true;
+    applause.muted = true;
+    var p = applause.play();
+    if (p && p.then) {
+      p.then(function () {
+        unlocking = false;
+        if (applauseWanted && !songPlaying) {
+          // the countdown already started: keep playing, just unmute
+          applause.currentTime = 0;
+          applause.muted = false;
+          applause.volume = 0.7;
+        } else {
+          applause.pause();
+          applause.currentTime = 0;
+          applause.muted = false;
+        }
+      }).catch(function () {
+        unlocking = false;
+        applause.muted = false;
+        if (applauseWanted && !songPlaying) playApplauseNow();
+      });
+    } else {
+      unlocking = false;
+      applause.muted = false;
+    }
+  }
+
+  function startApplause() {
+    if (songPlaying) return;
+    if (unlocking) { applauseWanted = true; return; }  // unlock finishes it
+    if (!applause.paused) return;
+    playApplauseNow();
   }
 
   /* ------------------------------------------------------------
