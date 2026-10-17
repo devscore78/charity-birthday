@@ -8,6 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="icon" href="assets/favi.png">
+<!-- fetch the first things she needs straight away, in parallel with the page -->
+<link rel="preload" as="image" href="assets/login.jpg">
+<link rel="preload" as="image" href="assets/cutie.png">
 <link rel="stylesheet" href="main.css">
 </head>
 <body>
@@ -153,6 +156,7 @@
       <div class="lab-red"></div>
       <div class="lab-cutie"><img data-src="assets/cutie.png" alt="" decoding="async"></div>
       <button class="lab-arrow" id="labArrow"><svg class="ic"><use href="#i-arrow-right"/></svg></button>
+      <label class="lab-arrow-hint" for="labArrow">Tap to explore</label>
     </div>
   </article>
 
@@ -203,8 +207,6 @@
 
   <article class="page" data-page="gallery">
     <div class="ig-page">
-      <button class="ig-back" id="igBack"><svg class="ic"><use href="#i-arrow-left"/></svg></button>
-
       <div class="ig-card">
         <div class="ig-head">
           <div class="ig-user">

@@ -48,6 +48,23 @@
   var song = $('bgAudio');
   var songPlaying = false;
 
+  var audioUnlocked = false;
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+    applause.muted = true;
+    var p = applause.play();
+    if (p && p.then) {
+      p.then(function () {
+        applause.pause();
+        applause.currentTime = 0;
+        applause.muted = false;
+      }).catch(function () { applause.muted = false; });
+    } else {
+      applause.muted = false;
+    }
+  }
+
   function startApplause() {
     if (!applause.paused || songPlaying) return;
     applause.loop = true;
@@ -97,7 +114,7 @@
       var first = els[0];
       first.onload = first.onerror = function () {
         for (var i = 1; i < els.length; i++) els[i].src = url;
-        done();
+        if (first.decode) first.decode().then(done, done); else done();
       };
       first.src = url;
     });
@@ -126,9 +143,9 @@
 
   setTimeout(function () {
     runQueue([
-      bgTask('assets/login.jpg'),          // PIN background
-      imgTask('assets/cutie.png'),         // first thing on the home screen
-      audioTask(applause, 'assets/applause.mp3'),
+      imgTask('assets/cutie.png'),         // home screen image, needed first
+      audioTask(applause, 'assets/applause.mp3'),  // must be ready for the countdown
+      bgTask('assets/login.jpg'),          // PIN background (already preloaded in <head>)
       imgTask('assets/hero-bg.jpg'),       // surprise picture
       imgTask('assets/puzzle.jpeg'),       // game picture
       imgTask('assets/img1.jpeg'),
@@ -191,6 +208,7 @@
   $('pad').addEventListener('click', function (e) {
     var b = e.target.closest('.btn');
     if (!b) return;
+    unlockAudio();
     if (b.getAttribute('data-k')) pinPress(b.getAttribute('data-k'));
     else if (b.getAttribute('data-act') === 'del') pinDel();
   });
@@ -336,7 +354,6 @@
   $('labArrow').addEventListener('click', openDrawer);
   $('drawerClose').addEventListener('click', closeDrawer);
   dov.addEventListener('click', closeDrawer);
-  $('igBack').addEventListener('click', function () { showPage('home'); });
 
   var drawerBtns = home.querySelectorAll('.drawer-btn');
   for (var di = 0; di < drawerBtns.length; di++) {
