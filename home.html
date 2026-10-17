@@ -4,18 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Birthday.</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@1,500;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/favi.png">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; font-family: 'Inter', sans-serif; overflow: hidden; background: #fff; color: #0a0a0a; -webkit-font-smoothing: antialiased; }
   .hidden { display: none !important; }
+  .ic { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -0.125em; flex-shrink: 0; }
 
   .top-stack { position: absolute; top: 0; left: 0; right: 0; z-index: 60; background: #fff; border-bottom: 1.5px solid #0a0a0a; }
   .marquee { width: 100%; overflow: hidden; background: #0a0a0a; color: #fff; padding: 6px 0; }
   .marquee-track { display: inline-flex; align-items: center; gap: 20px; white-space: nowrap; animation: mq 30s linear infinite; }
   .mq-item { display: inline-flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; }
-  .mq-item i { color: #e94b2c; font-size: 0.55rem; }
+  .mq-item .ic { color: #e94b2c; font-size: 0.55rem; }
   .mq-sep { color: #e94b2c; font-size: 0.9rem; font-weight: 700; }
   @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
@@ -242,7 +245,7 @@
     position: relative;
     z-index: 5;
   }
-  .gift-btn i { font-size: 2rem; }
+  .gift-btn .ic { font-size: 2rem; }
   @keyframes giftPulse {
     0%, 100% { box-shadow: 0 0 0 0 rgba(233, 75, 44, 0.6); transform: scale(1); }
     50%      { box-shadow: 0 0 0 20px rgba(233, 75, 44, 0); transform: scale(1.05); }
@@ -286,7 +289,7 @@
     font-size: 0.62rem; letter-spacing: 2px;
     text-transform: uppercase;
   }
-  .footer i { color: #e94b2c; font-size: 0.6rem; }
+  .footer .ic { color: #e94b2c; font-size: 0.6rem; }
 
   @media (max-width: 480px) {
     .ig-page { padding: 56px 12px 24px; }
@@ -300,26 +303,54 @@
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+    <symbol id="i-bars" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-xmark" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-certificate" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 2l2.4 2.6 3.5-.4.4 3.5L21 10l-1.7 3.1.9 3.4-3.4.9L15 21l-3-1.8L9 21l-1.8-3.6-3.4-.9.9-3.4L3 10l2.7-2.3.4-3.5 3.5.4z"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></symbol>
+    <symbol id="i-comment" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
+    <symbol id="i-envelope" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4"/><path d="M12 8v13M5 12v9h14v-9M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.5l8.8-8.8a5 5 0 0 0 0-7.1z"/></symbol>
+    <symbol id="i-heart-f" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.5l8.8-8.8a5 5 0 0 0 0-7.1z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-paper-plane" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M6 4h4v16H6zM14 4h4v16h-4z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M7 4l13 8-13 8z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+    <symbol id="i-puzzle-piece" viewBox="0 0 24 24"><path d="M20 12v6a2 2 0 0 1-2 2h-4v-2a2 2 0 1 0-4 0v2H6a2 2 0 0 1-2-2v-4h2a2 2 0 1 0 0-4H4V6a2 2 0 0 1 2-2h4V3a2 2 0 1 1 4 0v1h4a2 2 0 0 1 2 2v4h-1a2 2 0 1 0 0 4z"/></symbol>
+    <symbol id="i-share-nodes" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 2l3 6.9 7.5.7-5.7 5 1.7 7.4L12 18l-6.5 4 1.7-7.4-5.7-5 7.5-.7z"/></symbol>
+    <symbol id="i-wand-magic-sparkles" viewBox="0 0 24 24"><path d="M4 20L15 9M14 4l1.2 2.8L18 8l-2.8 1.2L14 12l-1.2-2.8L10 8l2.8-1.2zM19 14l.7 1.6 1.6.7-1.6.7-.7 1.6-.7-1.6-1.6-.7 1.6-.7z"/></symbol>
+  </defs>
+</svg>
 
 <div class="top-stack">
   <div class="marquee">
     <div class="marquee-track">
-      <span class="mq-item"><i class="fa-solid fa-code"></i> create by Techprotocol</span>
+      <span class="mq-item"><svg class="ic"><use href="#i-code"/></svg> create by Techprotocol</span>
       <span class="mq-sep">·</span>
-      <span class="mq-item"><i class="fa-solid fa-phone"></i> 0545395049</span>
+      <span class="mq-item"><svg class="ic"><use href="#i-phone"/></svg> 0545395049</span>
       <span class="mq-sep">·</span>
-      <span class="mq-item"><i class="fa-solid fa-envelope"></i> devscore78@gmail.com</span>
+      <span class="mq-item"><svg class="ic"><use href="#i-envelope"/></svg> devscore78@gmail.com</span>
       <span class="mq-sep">·</span>
-      <span class="mq-item"><i class="fa-solid fa-code"></i> create by Techprotocol</span>
+      <span class="mq-item"><svg class="ic"><use href="#i-code"/></svg> create by Techprotocol</span>
       <span class="mq-sep">·</span>
-      <span class="mq-item"><i class="fa-solid fa-phone"></i> 0545395049</span>
+      <span class="mq-item"><svg class="ic"><use href="#i-phone"/></svg> 0545395049</span>
       <span class="mq-sep">·</span>
-      <span class="mq-item"><i class="fa-solid fa-envelope"></i> devscore78@gmail.com</span>
+      <span class="mq-item"><svg class="ic"><use href="#i-envelope"/></svg> devscore78@gmail.com</span>
       <span class="mq-sep">·</span>
     </div>
   </div>
   <nav class="nav">
-    <button class="nav-btn" id="navLeft"><i class="fa-solid fa-bars" id="navIcon"></i></button>
+    <button class="nav-btn" id="navLeft"><svg class="ic"><use id="navIcon" href="#i-bars"/></svg></button>
     <span class="nav-brand">lab.</span>
     <span class="nav-idx" id="navIdx">01 / 05</span>
   </nav>
@@ -329,13 +360,13 @@
 <aside class="drawer" id="drawer">
   <div class="drawer-head">
     <span class="drawer-title">MENU</span>
-    <button class="drawer-close" id="drawerClose"><i class="fa-solid fa-xmark"></i></button>
+    <button class="drawer-close" id="drawerClose"><svg class="ic"><use href="#i-xmark"/></svg></button>
   </div>
-  <button class="drawer-btn" data-page="home"><span class="d-num">01</span><span class="d-label">Home</span><i class="fa-solid fa-arrow-right d-arrow"></i></button>
-  <button class="drawer-btn" data-page="music"><span class="d-num">02</span><span class="d-label">Music</span><i class="fa-solid fa-arrow-right d-arrow"></i></button>
-  <button class="drawer-btn" data-page="message"><span class="d-num">03</span><span class="d-label">Message</span><i class="fa-solid fa-arrow-right d-arrow"></i></button>
-  <button class="drawer-btn" data-page="gallery"><span class="d-num">04</span><span class="d-label">Gallery</span><i class="fa-solid fa-arrow-right d-arrow"></i></button>
-  <button class="drawer-btn" data-page="surprise"><span class="d-num">05</span><span class="d-label">Surprise</span><i class="fa-solid fa-arrow-right d-arrow"></i></button>
+  <button class="drawer-btn" data-page="home"><span class="d-num">01</span><span class="d-label">Home</span><svg class="ic d-arrow"><use href="#i-arrow-right"/></svg></button>
+  <button class="drawer-btn" data-page="music"><span class="d-num">02</span><span class="d-label">Music</span><svg class="ic d-arrow"><use href="#i-arrow-right"/></svg></button>
+  <button class="drawer-btn" data-page="message"><span class="d-num">03</span><span class="d-label">Message</span><svg class="ic d-arrow"><use href="#i-arrow-right"/></svg></button>
+  <button class="drawer-btn" data-page="gallery"><span class="d-num">04</span><span class="d-label">Gallery</span><svg class="ic d-arrow"><use href="#i-arrow-right"/></svg></button>
+  <button class="drawer-btn" data-page="surprise"><span class="d-num">05</span><span class="d-label">Surprise</span><svg class="ic d-arrow"><use href="#i-arrow-right"/></svg></button>
 </aside>
 
 <main class="stage">
@@ -359,8 +390,8 @@
         <span class="lab-side-text">FOR CHARITY</span>
       </div>
       <div class="lab-red"></div>
-      <div class="lab-cutie"><img src="assets/cutie.png" alt=""></div>
-      <button class="lab-arrow" id="labArrow"><i class="fa-solid fa-arrow-right"></i></button>
+      <div class="lab-cutie"><img src="assets/cutie.png" alt="" fetchpriority="high" decoding="async"></div>
+      <button class="lab-arrow" id="labArrow"><svg class="ic"><use href="#i-arrow-right"/></svg></button>
     </div>
   </article>
 
@@ -374,7 +405,7 @@
       <div class="lab-red-small"></div>
       <div class="lab-content">
         <div class="music-box">
-          <button class="play-btn" id="playBtn"><i class="fa-solid fa-play"></i></button>
+          <button class="play-btn" id="playBtn"><svg class="ic"><use href="#i-play"/></svg></button>
           <div style="flex:1">
             <p class="music-title">OUR SONG</p>
             <div class="eq" id="eq"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
@@ -395,12 +426,12 @@
       <div class="lab-red-small"></div>
       <div class="lab-content">
         <div class="notif" id="notif">
-          <div class="notif-icon"><i class="fa-solid fa-bell"></i><span class="notif-dot"></span></div>
+          <div class="notif-icon"><svg class="ic"><use href="#i-bell"/></svg><span class="notif-dot"></span></div>
           <div class="notif-body">
             <p class="notif-title">I left you a mail</p>
             <p class="notif-sub">Tap to open</p>
           </div>
-          <i class="fa-solid fa-arrow-right"></i>
+          <svg class="ic"><use href="#i-arrow-right"/></svg>
         </div>
         <div class="letter hidden" id="letter">
           <p id="letterText"></p>
@@ -411,38 +442,38 @@
 
   <article class="page" data-page="gallery">
     <div class="ig-page">
-      <button class="ig-back" id="igBack"><i class="fa-solid fa-arrow-left"></i></button>
+      <button class="ig-back" id="igBack"><svg class="ic"><use href="#i-arrow-left"/></svg></button>
 
       <div class="ig-card">
         <div class="ig-head">
           <div class="ig-user">
             <div class="ig-avatar">
-              <img src="assets/cutie.png" alt="">
+              <img src="assets/cutie.png" alt="" decoding="async">
             </div>
             <span class="ig-username">for_you</span>
           </div>
           <div class="ig-actions">
-            <i class="fa-regular fa-heart"></i>
-            <i class="fa-regular fa-paper-plane"></i>
+            <svg class="ic"><use href="#i-heart"/></svg>
+            <svg class="ic"><use href="#i-paper-plane"/></svg>
           </div>
         </div>
 
         <div class="ig-photo">
-          <img class="ig-slide active" src="assets/img1.jpeg" alt="">
-          <img class="ig-slide" src="assets/img2.jpeg" alt="">
-          <img class="ig-slide" src="assets/img3.jpeg" alt="">
-          <img class="ig-slide" src="assets/img4.jpeg" alt="">
-          <img class="ig-slide" src="assets/img5.jpg" alt="">
-          <img class="ig-slide" src="assets/img6.jpg" alt="">
+          <img class="ig-slide active" src="assets/img1.jpeg" alt="" loading="lazy" decoding="async">
+          <img class="ig-slide" src="assets/img2.jpeg" alt="" loading="lazy" decoding="async">
+          <img class="ig-slide" src="assets/img3.jpeg" alt="" loading="lazy" decoding="async">
+          <img class="ig-slide" src="assets/img4.jpeg" alt="" loading="lazy" decoding="async">
+          <img class="ig-slide" src="assets/img5.jpg" alt="" loading="lazy" decoding="async">
+          <img class="ig-slide" src="assets/img6.jpg" alt="" loading="lazy" decoding="async">
         </div>
 
         <div class="ig-bottom">
           <div class="ig-icons-left">
-            <i class="fa-regular fa-heart"></i>
-            <i class="fa-regular fa-comment"></i>
-            <i class="fa-regular fa-paper-plane"></i>
+            <svg class="ic"><use href="#i-heart"/></svg>
+            <svg class="ic"><use href="#i-comment"/></svg>
+            <svg class="ic"><use href="#i-paper-plane"/></svg>
           </div>
-          <i class="fa-regular fa-bookmark"></i>
+          <svg class="ic"><use href="#i-bookmark"/></svg>
         </div>
 
         <div class="ig-caption">
@@ -462,20 +493,20 @@
       <h2 class="lab-page-title">Unwrap.</h2>
       <div class="lab-red-small"></div>
       <div class="lab-content">
-        <p class="lab-caption" id="surpriseSub"><i class="fa-solid fa-lock"></i> Complete a game to unlock the gift</p>
+        <p class="lab-caption" id="surpriseSub"><svg class="ic"><use href="#i-lock"/></svg> Complete a game to unlock the gift</p>
 
-        <button class="btn-solid" id="playGame"><i class="fa-solid fa-puzzle-piece"></i> PLAY GAME</button>
+        <button class="btn-solid" id="playGame"><svg class="ic"><use href="#i-puzzle-piece"/></svg> PLAY GAME</button>
 
         <button class="gift-btn hidden" id="giftBtn">
-          <i class="fa-solid fa-gift"></i>
+          <svg class="ic"><use href="#i-gift"/></svg>
           TAP FOR MAGIC
         </button>
 
         <div class="flyer-wrap hidden" id="flyerWrap">
-          <div class="flyer-frame"><img src="assets/hero-bg.jpg" alt=""></div>
+          <div class="flyer-frame"><img src="assets/hero-bg.jpg" alt="" loading="lazy" decoding="async"></div>
           <div class="flyer-actions">
-            <a class="btn-solid" download="surprise.jpg" href="assets/hero-bg.jpg"><i class="fa-solid fa-download"></i> DOWNLOAD</a>
-            <button class="btn-solid" id="shareBtn"><i class="fa-solid fa-share-nodes"></i> SHARE</button>
+            <a class="btn-solid" download="surprise.jpg" href="assets/hero-bg.jpg"><svg class="ic"><use href="#i-download"/></svg> DOWNLOAD</a>
+            <button class="btn-solid" id="shareBtn"><svg class="ic"><use href="#i-share-nodes"/></svg> SHARE</button>
           </div>
         </div>
       </div>
@@ -485,14 +516,14 @@
 </main>
 
 <footer class="footer">
-  <i class="fa-solid fa-code"></i> © Techprotocol
+  <svg class="ic"><use href="#i-code"/></svg> © Techprotocol
 </footer>
 
-<audio id="bgAudio" src="assets/song.mp3" preload="auto"></audio>
+<audio id="bgAudio" src="assets/song.mp3" preload="none"></audio>
 <audio id="applauseAudio" src="assets/applause.mp3" loop preload="auto"></audio>
 
 <script>
-  console.log('HOME PAGE LOADED');
+  function ic(n) { return '<svg class="ic"><use href="#i-' + n + '"/></svg>'; }
 
   var bgAudio = document.getElementById('bgAudio');
   var applauseAudio = document.getElementById('applauseAudio');
@@ -528,19 +559,19 @@
       songPlaying = true;
       bgAudio.currentTime = 0;
       bgAudio.play().catch(function(){});
-      btn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      btn.innerHTML = ic('pause');
       document.getElementById('eq').classList.add('active');
     } else {
       bgAudio.pause();
       songPlaying = false;
-      btn.innerHTML = '<i class="fa-solid fa-play"></i>';
+      btn.innerHTML = ic('play');
       document.getElementById('eq').classList.remove('active');
     }
   });
 
   bgAudio.addEventListener('ended', function() {
     songPlaying = false;
-    document.getElementById('playBtn').innerHTML = '<i class="fa-solid fa-play"></i>';
+    document.getElementById('playBtn').innerHTML = ic('play');
     document.getElementById('eq').classList.remove('active');
   });
 
@@ -590,7 +621,7 @@
       oldP.style.opacity = '';
     }, 550);
     currentPage = name;
-    navIcon.className = (name === 'home') ? 'fa-solid fa-bars' : 'fa-solid fa-arrow-left';
+    navIcon.setAttribute('href', name === 'home' ? '#i-bars' : '#i-arrow-left');
     var idx = names.indexOf(name) + 1;
     navIdx.textContent = (idx < 10 ? '0' + idx : idx) + ' / 05';
     if (name === 'surprise') onEnterSurprise();
@@ -661,12 +692,12 @@
     var solved = localStorage.getItem('tp_puzzle_solved') === '1';
     flyerWrap.classList.add('hidden');
     if (!solved) {
-      surpriseSub.innerHTML = '<i class="fa-solid fa-lock"></i> Complete a game to unlock the gift';
+      surpriseSub.innerHTML = ic('lock') + ' Complete a game to unlock the gift';
       playGameBtn.classList.remove('hidden');
       giftBtn.classList.add('hidden');
       return;
     }
-    surpriseSub.innerHTML = '<i class="fa-solid fa-gift"></i> A little magic is waiting…';
+    surpriseSub.innerHTML = ic('gift') + ' A little magic is waiting…';
     playGameBtn.classList.add('hidden');
     giftBtn.classList.remove('hidden');
     showHurray();
@@ -682,16 +713,16 @@
 
   giftBtn.addEventListener('click', function() {
     giftBtn.classList.add('hidden');
-    surpriseSub.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Magic revealed!';
+    surpriseSub.innerHTML = ic('wand-magic-sparkles') + ' Magic revealed!';
     flyerWrap.classList.remove('hidden');
     burstConfetti();
   });
 
   function burstConfetti() {
-    var icons = ['fa-solid fa-star', 'fa-solid fa-certificate', 'fa-solid fa-heart', 'fa-solid fa-bolt', 'fa-solid fa-wand-magic-sparkles'];
+    var icons = ['star', 'certificate', 'heart-f', 'bolt', 'wand-magic-sparkles'];
     for (var i = 0; i < 60; i++) {
       var c = document.createElement('span');
-      c.innerHTML = '<i class="' + icons[Math.floor(Math.random() * icons.length)] + '"></i>';
+      c.innerHTML = ic(icons[Math.floor(Math.random() * icons.length)]);
       c.style.cssText = 'position:fixed;font-size:22px;pointer-events:none;z-index:9999;color:' + (['#e94b2c','#0a0a0a','#ffd166'][Math.floor(Math.random() * 3)]) + ';transition:transform 1.4s ease,opacity 1.4s ease;';
       c.style.left = (50 + (Math.random() * 60 - 30)) + 'vw';
       c.style.top = (50 + (Math.random() * 40 - 20)) + 'vh';
@@ -727,7 +758,7 @@
     } catch (e) {}
   });
 
-  console.log('HOME READY');
+  
 </script>
 
 </body>
